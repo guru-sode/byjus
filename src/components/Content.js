@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination, Badge } from 'antd';
+import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination, Badge, Popover } from 'antd';
 import 'antd/dist/antd.css';
 
 const { Header, Content } = Layout;
@@ -56,13 +56,15 @@ class PageContent extends Component {
         }
     }
 
-    getJobCard(jobs) {
+    getJobCard(data) {
         let carousel = [];
-        if (jobs) {
+        if (data) {
+            let jobs = data.data;
             let from = (this.state.page - 1) * this.state.pageSize;
             let to = from + 21;
-            jobs.data.slice(from, to).map(job => {
+            jobs.slice(from, to).map(job => {
                 carousel.push(
+                    <Popover title={job.title.slice(0, 25)} trigger="hover" placement="rightTop" arrowPointAtCenter>
                     <Col span={8} key={job._id}>
                         <div style={{ margin: "2%" }}>
                             <Carousel>
@@ -81,6 +83,7 @@ class PageContent extends Component {
                             </Carousel>
                         </div>
                     </Col>
+                    </Popover>
                 )
             })
         }
@@ -106,7 +109,7 @@ class PageContent extends Component {
                     <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => this.handleSearch(value)} enterButton />
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
-                    <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+                    <div style={{ background: '#fff', padding: 24, minHeight: 600 }}>
                         <Row gutter={8}>
                             {this.getJobCard(this.state.data)}
                         </Row>
