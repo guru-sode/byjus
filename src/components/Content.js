@@ -23,7 +23,8 @@ class PageContent extends Component {
             .then((response) => response.json())
             .then((data) => {
                 this.setState({
-                    data
+                    data,
+                    dataForSearch: data
                 })
             })
             .catch((e) => {
@@ -43,7 +44,7 @@ class PageContent extends Component {
     handleSearch(value) {
         let keyword = value.toLowerCase();
         if(this.state.data){
-            let jobs = this.state.data.data;
+            let jobs = this.state.dataForSearch.data;
             let filteredJobs = {};
             filteredJobs.data = jobs.filter(job =>{
                 if(job.companyname.toLowerCase().includes(keyword) || job.title.toLowerCase().includes(keyword) || job.location.toLowerCase().includes(keyword) || job.skills.toLowerCase().includes(keyword))
