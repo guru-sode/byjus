@@ -5,6 +5,10 @@ This is an assignment for Byjus
 
 Along with react Ant design is used 
 
+Enter job title, skills, location, company name in search box, seach will work
+
+Search is not supported for job description, salary, type etc..
+
 ## Scripts
 
 Starting of application - `npm start`
