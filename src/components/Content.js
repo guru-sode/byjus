@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination, Badge, Popover } from 'antd';
+import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination, Badge, Popover, Button, InputNumber } from 'antd';
 import 'antd/dist/antd.css';
 
 const { Header, Content } = Layout;
@@ -15,6 +15,8 @@ class PageContent extends Component {
         this.getJobCard = this.getJobCard.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+        this.getContent = this.getContent.bind(this);
+        this.onChangeExp = this.onChangeExp.bind(this);
     }
 
     componentWillMount() {
@@ -41,14 +43,60 @@ class PageContent extends Component {
         })
     }
 
-    handleSearch(value) {
-        let keyword = value.toLowerCase();
-        if(this.state.data){
+    onChangeExp(e) {
+        let userExp = parseInt(e.target.value);
+        if (this.state.data) {
             let jobs = this.state.dataForSearch.data;
             let filteredJobs = {};
-            filteredJobs.data = jobs.filter(job =>{
-                if(job.companyname.toLowerCase().includes(keyword) || job.title.toLowerCase().includes(keyword) || job.location.toLowerCase().includes(keyword) || job.skills.toLowerCase().includes(keyword))
-                return job
+            filteredJobs.data = jobs.filter(job => {
+                if(job.experience && job.experience !== " "){
+                    let reqExp = job.experience.split("-");
+                    let minReqExp = reqExp[0];
+                    if(reqExp[1]){
+                        var expAndYr = reqExp[1].split(" ");
+                        var maxExp = expAndYr[0];
+                    }
+                    if(maxExp){
+                        if(userExp >= minReqExp && userExp <= maxExp){
+                            return job
+                        }
+                    }else{
+                        if(userExp >= minReqExp){
+                            return job
+                        }
+                    }
+                }
+            })
+            this.setState({
+                data: filteredJobs,
+                page: 1
+            })
+        }
+    }
+
+    getContent(job) {
+        return(
+            <div>
+            <p>{job.title.slice(0, 25)}</p>
+            <p>{job.companyname.slice(0, 25)}</p>
+            <p>{job.experience.slice(0, 25)}</p>
+            <p>{job.location.slice(0, 25)}</p>
+            <p>{job.skills.slice(0, 25)}</p>
+            <p>{job.salary.slice(0, 25)}</p>
+            <p>{job.source.slice(0, 25)}</p>
+            <Button type="primary" href={job.applylink} style={{marginLeft:"35%"}}>Apply</Button>
+        </div>
+        )
+    }
+
+    handleSearch(value) {
+        let keyword = value.toLowerCase();
+        if (this.state.data) {
+            let jobs = this.state.dataForSearch.data;
+            let filteredJobs = {};
+            filteredJobs.data = jobs.filter(job => {
+                if (job.companyname.toLowerCase().includes(keyword) || job.title.toLowerCase().includes(keyword) || job.location.toLowerCase().includes(keyword) || job.skills.toLowerCase().includes(keyword))
+                    return job
             })
             this.setState({
                 data: filteredJobs,
@@ -65,25 +113,25 @@ class PageContent extends Component {
             let to = from + 21;
             jobs.slice(from, to).map(job => {
                 carousel.push(
-                    <Popover title={job.title.slice(0, 25)} trigger="hover" placement="rightTop" arrowPointAtCenter>
-                    <Col span={8} key={job._id}>
-                        <div style={{ margin: "2%" }}>
-                            <Carousel>
-                                <div>
-                                    <h3>{job.title.slice(0, 25)}</h3>
-                                </div>
-                                <div>
-                                    <h3>{job.companyname.slice(0, 25)}</h3>
-                                </div>
-                                <div>
-                                    <h3>{job.skills.slice(0, 25)}</h3>
-                                </div>
-                                <div>
-                                    <h3>{job.experience.slice(0, 25)}</h3>
-                                </div>
-                            </Carousel>
-                        </div>
-                    </Col>
+                    <Popover content={this.getContent(job)} title={job.title.slice(0, 25)} trigger="hover" placement="rightTop" arrowPointAtCenter>
+                        <Col span={8} xs={{span: 12}} sm={{span: 12}} md={{span: 8}} key={job._id}>
+                            <div style={{ margin: "2%" }}>
+                                <Carousel>
+                                    <div>
+                                        <h3>{job.title.slice(0, 25)}</h3>
+                                    </div>
+                                    <div>
+                                        <h3>{job.companyname.slice(0, 25)}</h3>
+                                    </div>
+                                    <div>
+                                        <h3>{job.skills.slice(0, 25)}</h3>
+                                    </div>
+                                    <div>
+                                        <h3>{job.experience.slice(0, 25)}</h3>
+                                    </div>
+                                </Carousel>
+                            </div>
+                        </Col>
                     </Popover>
                 )
             })
@@ -102,12 +150,16 @@ class PageContent extends Component {
         return (
             <div>
                 <Header style={{ alignContent: "center" }}>
-                    <div style={{float:"left"}}>
-                    <Badge count={this.state.data ? this.state.data.data.length : 0} overflowCount={this.state.data ? this.state.data.data.length : 2000} showZero={true} offset={[25,5]}>
-                        <a> Total Jobs</a>
-                    </Badge>
+                    <div style={{ float: "left" }}>
+                        <Badge count={this.state.data ? this.state.data.data.length : 0} overflowCount={this.state.data ? this.state.data.data.length : 2000} showZero={true} offset={[25, 5]}>
+                            <a> Total Jobs</a>
+                        </Badge>
                     </div>
-                    <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => this.handleSearch(value)} enterButton />
+                    <Search style={{ width: 200, float: "right", marginTop: "2%" }} placeholder="Search Job..." onSearch={value => this.handleSearch(value)} enterButton />
+                    <div style={{ float: "right", marginRight: "2%" }}>
+                    <a>  Experience(In Years) </a>
+                    <InputNumber min={0} max={50} defaultValue={1} onPressEnter={this.onChangeExp} />
+                    </div>
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
                     <div style={{ background: '#fff', padding: 24, minHeight: 600 }}>
@@ -115,7 +167,7 @@ class PageContent extends Component {
                             {this.getJobCard(this.state.data)}
                         </Row>
                     </div>
-                    <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 0} defaultPageSize={21} defaultCurrent={1} style={{marginBottom: 0}}/>
+                    <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 0} defaultPageSize={21} defaultCurrent={1} style={{ marginBottom: 0 }} />
                 </Content>
             </div>
         );
