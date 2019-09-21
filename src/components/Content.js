@@ -51,7 +51,8 @@ class PageContent extends Component {
                 return job
             })
             this.setState({
-                data: filteredJobs
+                data: filteredJobs,
+                page: 1
             })
         }
     }
@@ -113,8 +114,8 @@ class PageContent extends Component {
                         <Row gutter={8}>
                             {this.getJobCard(this.state.data)}
                         </Row>
-                        <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 21} defaultPageSize={21} />
                     </div>
+                    <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 0} defaultPageSize={21} defaultCurrent={1} style={{marginBottom: 0}}/>
                 </Content>
             </div>
         );
