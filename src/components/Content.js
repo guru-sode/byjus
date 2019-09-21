@@ -14,6 +14,7 @@ class PageContent extends Component {
         };
         this.getJobCard = this.getJobCard.bind(this);
         this.onChangePage = this.onChangePage.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentWillMount() {
@@ -37,6 +38,21 @@ class PageContent extends Component {
             page,
             pageSize
         })
+    }
+
+    handleSearch(value) {
+        let keyword = value.toLowerCase();
+        if(this.state.data){
+            let jobs = this.state.data.data;
+            let filteredJobs = {};
+            filteredJobs.data = jobs.filter(job =>{
+                if(job.companyname.toLowerCase().includes(keyword) || job.title.toLowerCase().includes(keyword) || job.location.toLowerCase().includes(keyword) || job.skills.toLowerCase().includes(keyword))
+                return job
+            })
+            this.setState({
+                data: filteredJobs
+            })
+        }
     }
 
     getJobCard(jobs) {
@@ -83,10 +99,10 @@ class PageContent extends Component {
                 <Header style={{ alignContent: "center" }}>
                     <div style={{float:"left"}}>
                     <Badge count={this.state.data ? this.state.data.data.length : 0} overflowCount={this.state.data ? this.state.data.data.length : 2000} showZero={true} offset={[25,5]}>
-                        <a href="#" className="head-example"> Total Jobs</a>
+                        <a> Total Jobs</a>
                     </Badge>
                     </div>
-                    <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => console.log(value)} enterButton />
+                    <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => this.handleSearch(value)} enterButton />
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
                     <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
