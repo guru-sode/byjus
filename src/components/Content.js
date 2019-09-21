@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Input, Carousel, Row, Col, Skeleton } from 'antd';
+import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination } from 'antd';
 import 'antd/dist/antd.css';
 
 const { Header, Content } = Layout;
@@ -8,61 +8,70 @@ const { Search } = Input;
 class PageContent extends Component {
     constructor(props) {
         super(props);
-        this.state = {  };
+        this.state = {
+            page: 1,
+            pageSize: 21
+        };
         this.getJobCard = this.getJobCard.bind(this);
+        this.onChangePage = this.onChangePage.bind(this);
     }
 
-    componentWillMount(){
+    componentWillMount() {
         const url = "http://nut-case.s3.amazonaws.com/jobs.json"
         fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-            this.setState({
-                data
+            .then((response) => response.json())
+            .then((data) => {
+                this.setState({
+                    data
+                })
             })
-        })
-        .catch((e) => {
-            this.setState({
-                isError: true
+            .catch((e) => {
+                this.setState({
+                    isError: true
+                })
             })
+    }
+
+    onChangePage(page, pageSize) {
+        this.setState({
+            page,
+            pageSize
         })
     }
 
-     onChangeCarousel(a, b, c) {
-        console.log(a, b, c);
-      }
-
-    getJobCard(jobs){
-        let carousel=[];
-        if(jobs){
-            jobs.data.slice(0,21).map(job=>{
+    getJobCard(jobs) {
+        let carousel = [];
+        if (jobs) {
+            let from = (this.state.page-1)*this.state.pageSize;
+            let to = from + 21;
+            jobs.data.slice(from, to).map(job => {
                 carousel.push(
-                        <Col span={8} key={job._id}>
-                            <div style={{margin:"2%"}}>
-                    <Carousel afterChange={this.onChangeCarousel}>
-                    <div>
-                      <h3>{job.title.slice(0,25)}</h3>
-                    </div>
-                    <div>
-                      <h3>{job.companyname.slice(0,25)}</h3>
-                    </div>
-                    <div>
-                      <h3>{job.skills.slice(0,25)}</h3>
-                    </div>
-                    <div>
-                      <h3>{job.experience.slice(0,25)}</h3>
-                    </div>
-                  </Carousel>
-                  </div>
-                  </Col>
+                    <Col span={8} key={job._id}>
+                        <div style={{ margin: "2%" }}>
+                            <Carousel>
+                                <div>
+                                    <h3>{job.title.slice(0, 25)}</h3>
+                                </div>
+                                <div>
+                                    <h3>{job.companyname.slice(0, 25)}</h3>
+                                </div>
+                                <div>
+                                    <h3>{job.skills.slice(0, 25)}</h3>
+                                </div>
+                                <div>
+                                    <h3>{job.experience.slice(0, 25)}</h3>
+                                </div>
+                            </Carousel>
+                        </div>
+                    </Col>
                 )
             })
         }
-        else{
+        else {
             return (
-                <div style={{height:"100vh"}}>
-            <Skeleton />
-            </div>
+                <div style={{ height: "100vh" }}>
+                    <Skeleton />
+                </div>
             )
         }
         return carousel;
@@ -71,16 +80,17 @@ class PageContent extends Component {
     render() {
         return (
             <div>
-            <Header style={{alignContent: "center"}}>
-            <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => console.log(value)} enterButton />
-            </Header>
-            <Content style={{ padding: '0 50px' }}>
-              <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
-              <Row gutter={8}>
-                    {this.getJobCard(this.state.data)}
-                    </Row>
-              </div>
-            </Content>
+                <Header style={{ alignContent: "center" }}>
+                    <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => console.log(value)} enterButton />
+                </Header>
+                <Content style={{ padding: '0 50px' }}>
+                    <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
+                        <Row gutter={8}>
+                            {this.getJobCard(this.state.data)}
+                        </Row>
+                        <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 21} defaultPageSize={21}/>
+                    </div>
+                </Content>
             </div>
         );
     }
