@@ -7,7 +7,6 @@ import JobCarousel from './JobCarousel';
 class JobCard extends Component {
     constructor(props) {
         super(props);
-        this.state = {  };
         this.getJobCard = this.getJobCard.bind(this);
     }
 

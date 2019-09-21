@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Input,  Pagination, Badge, InputNumber } from 'antd';
 import 'antd/dist/antd.css';
-import JobCard from '../JobCard';
+import JobCard from './JobCard';
 
 const { Header, Content } = Layout;
 const { Search } = Input;

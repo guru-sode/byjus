@@ -28,3 +28,9 @@ Experince given in job title is not considered
 API doesn't provide pagination so client side pagination is implemented
 
 Search is implemented in client side
+
+### Unit testing
+
+Unit test cases are written in App.test.js file
+
+Use `npm test` to run unit test cases
