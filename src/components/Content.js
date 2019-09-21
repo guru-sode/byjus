@@ -19,8 +19,9 @@ class PageContent extends Component {
     }
 
     componentWillMount() {
-        const url = "http://nut-case.s3.amazonaws.com/jobs.json"
-        fetch(url)
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+        const url = "https://nut-case.s3.amazonaws.com/jobs.json"
+        fetch(proxyUrl + url)
             .then((response) => response.json())
             .then((data) => {
                 this.setState({
