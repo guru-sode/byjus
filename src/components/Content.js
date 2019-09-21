@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination } from 'antd';
+import { Layout, Input, Carousel, Row, Col, Skeleton, Pagination, Badge } from 'antd';
 import 'antd/dist/antd.css';
 
 const { Header, Content } = Layout;
@@ -42,7 +42,7 @@ class PageContent extends Component {
     getJobCard(jobs) {
         let carousel = [];
         if (jobs) {
-            let from = (this.state.page-1)*this.state.pageSize;
+            let from = (this.state.page - 1) * this.state.pageSize;
             let to = from + 21;
             jobs.data.slice(from, to).map(job => {
                 carousel.push(
@@ -81,6 +81,11 @@ class PageContent extends Component {
         return (
             <div>
                 <Header style={{ alignContent: "center" }}>
+                    <div style={{float:"left"}}>
+                    <Badge count={this.state.data ? this.state.data.data.length : 0} overflowCount={this.state.data ? this.state.data.data.length : 2000} showZero={true} offset={[25,5]}>
+                        <a href="#" className="head-example"> Total Jobs</a>
+                    </Badge>
+                    </div>
                     <Search style={{ width: 200, float: "right", marginTop: "1%" }} placeholder="Search Job..." onSearch={value => console.log(value)} enterButton />
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
@@ -88,7 +93,7 @@ class PageContent extends Component {
                         <Row gutter={8}>
                             {this.getJobCard(this.state.data)}
                         </Row>
-                        <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 21} defaultPageSize={21}/>
+                        <Pagination onChange={this.onChangePage} total={this.state.data ? this.state.data.data.length : 21} defaultPageSize={21} />
                     </div>
                 </Content>
             </div>
