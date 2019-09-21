@@ -45,45 +45,43 @@ class PageContent extends Component {
 
     onChangeExp(e) {
         let userExp = parseInt(e.target.value);
-        if (this.state.data) {
-            let jobs = this.state.dataForSearch.data;
-            let filteredJobs = {};
-            filteredJobs.data = jobs.filter(job => {
-                if(job.experience && job.experience !== " "){
-                    let reqExp = job.experience.split("-");
-                    let minReqExp = reqExp[0];
-                    if(reqExp[1]){
-                        var expAndYr = reqExp[1].split(" ");
-                        var maxExp = expAndYr[0];
-                    }
-                    if(maxExp){
-                        if(userExp >= minReqExp && userExp <= maxExp){
-                            return job
+        if(userExp){
+            if (this.state.data) {
+                let jobs = this.state.dataForSearch.data;
+                let filteredJobs = {};
+                filteredJobs.data = jobs.filter(job => {
+                    if(job.experience && job.experience !== " "){
+                        let reqExp = job.experience.split("-");
+                        let minReqExp = reqExp[0];
+                        if(reqExp[1]){
+                            var expAndYr = reqExp[1].split(" ");
+                            var maxExp = expAndYr[0];
                         }
-                    }else{
-                        if(userExp >= minReqExp){
-                            return job
+                        if(maxExp){
+                            if(userExp >= minReqExp && userExp <= maxExp){
+                                return job
+                            }
                         }
                     }
-                }
-            })
-            this.setState({
-                data: filteredJobs,
-                page: 1
-            })
+                })
+                this.setState({
+                    data: filteredJobs,
+                    page: 1
+                })
+            }
         }
     }
 
     getContent(job) {
         return(
             <div>
-            <p>{job.title.slice(0, 25)}</p>
-            <p>{job.companyname.slice(0, 25)}</p>
-            <p>{job.experience.slice(0, 25)}</p>
-            <p>{job.location.slice(0, 25)}</p>
-            <p>{job.skills.slice(0, 25)}</p>
-            <p>{job.salary.slice(0, 25)}</p>
-            <p>{job.source.slice(0, 25)}</p>
+            <p>Title : {job.title.slice(0, 25)}</p>
+            <p>Company :{job.companyname.slice(0, 25)}</p>
+            <p>Experience :{job.experience.slice(0, 25)}</p>
+            <p>Location :{job.location.slice(0, 25)}</p>
+            <p>Skills :{job.skills.slice(0, 25)}</p>
+            <p>Salary :{job.salary.slice(0, 25)}</p>
+            <p>Source :{job.source.slice(0, 25)}</p>
             <Button type="primary" href={job.applylink} style={{marginLeft:"35%"}}>Apply</Button>
         </div>
         )
@@ -158,7 +156,7 @@ class PageContent extends Component {
                     <Search style={{ width: 200, float: "right", marginTop: "2%" }} placeholder="Search Job..." onSearch={value => this.handleSearch(value)} enterButton />
                     <div style={{ float: "right", marginRight: "2%" }}>
                     <a>  Experience(In Years) </a>
-                    <InputNumber min={0} max={50} defaultValue={1} onPressEnter={this.onChangeExp} />
+                    <InputNumber min={0} max={50} defaultValue={0} onPressEnter={this.onChangeExp} />
                     </div>
                 </Header>
                 <Content style={{ padding: '0 50px' }}>
