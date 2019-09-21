@@ -111,8 +111,8 @@ class PageContent extends Component {
             let to = from + 21;
             jobs.slice(from, to).map(job => {
                 carousel.push(
-                    <Popover content={this.getContent(job)} title={job.title.slice(0, 25)} trigger="hover" placement="rightTop" arrowPointAtCenter>
-                        <Col span={8} xs={{span: 12}} sm={{span: 12}} md={{span: 8}} key={job._id}>
+                    <Popover content={this.getContent(job)} title={job.title.slice(0, 25)} trigger="hover" placement="rightTop" arrowPointAtCenter key={job._id}>
+                        <Col span={8} xs={{span: 12}} sm={{span: 12}} md={{span: 8}}>
                             <div style={{ margin: "2%" }}>
                                 <Carousel>
                                     <div>
