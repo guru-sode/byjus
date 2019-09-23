@@ -11,21 +11,6 @@ class JobCard extends Component {
         this.getContent = this.getContent.bind(this);
     }
 
-    getContent(job) {
-        return (
-            <div>
-                <p>Title : {job.title.slice(0, 25)}</p>
-                <p>Company :{job.companyname.slice(0, 25)}</p>
-                <p>Experience :{job.experience.slice(0, 25)}</p>
-                <p>Location :{job.location.slice(0, 25)}</p>
-                <p>Skills :{job.skills.slice(0, 25)}</p>
-                <p>Salary :{job.salary.slice(0, 25)}</p>
-                <p>Source :{job.source.slice(0, 25)}</p>
-                <Button type="primary" href={job.applylink} style={{ marginLeft: "35%" }}>Apply</Button>
-            </div>
-        )
-    }
-
     getJobCard(data) {
         let carousel = [];
         if (data) {
