@@ -8,7 +8,6 @@ class JobCard extends Component {
     constructor(props) {
         super(props);
         this.getJobCard = this.getJobCard.bind(this);
-        this.getContent = this.getContent.bind(this);
     }
 
     getJobCard(data) {
